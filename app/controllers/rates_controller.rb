@@ -2,9 +2,9 @@ class RatesController < ApplicationController
 
   # GET /daily_rates
   def get_daily_rates
-    @rates = Rate.where(time: params[:date].to_date.all_day)
+    @rates = Rate.where(time: params[:date].to_date.all_day).order(:time)
 
-    render json: @rates
+    render json: @rates, only: [:time, :value]
   end
 
   # GET /daily_benefits
@@ -31,7 +31,7 @@ class RatesController < ApplicationController
       break if best_rate > 0
     end
 
-    render json: {value: "#{best_rate.truncate(2)}€"}
+    render json: {value: "#{best_rate}€"}
   end
 
 end

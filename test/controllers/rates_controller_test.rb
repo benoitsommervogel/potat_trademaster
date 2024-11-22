@@ -1,38 +1,32 @@
 require "test_helper"
 
 class RatesControllerTest < ActionDispatch::IntegrationTest
-  setup do
-    @rate = rates(:one)
-  end
 
-  test "should get index" do
-    get rates_url, as: :json
+  test "should get nothing with invalid date" do
+    get daily_rates_url("2024-11-22"), as: :json
     assert_response :success
+    assert_equal @response.parsed_body, []
   end
-
-  test "should create rate" do
-    assert_difference("Rate.count") do
-      post rates_url, params: { rate: { time: @rate.time, value: @rate.value } }, as: :json
-    end
-
-    assert_response :created
-  end
-
-  test "should show rate" do
-    get rate_url(@rate), as: :json
+  
+  test "should get 0 euros for maximum benefits with invalid date" do
+    get daily_benefits_url("2024-11-22"), as: :json
     assert_response :success
+    assert_equal @response.parsed_body, {"value"=>"0€"}
   end
 
-  test "should update rate" do
-    patch rate_url(@rate), params: { rate: { time: @rate.time, value: @rate.value } }, as: :json
+  test "should get daily rates in order with valid date" do
+    get daily_rates_url("2024-11-21"), as: :json
     assert_response :success
+    assert_equal @response.parsed_body, [{"time"=>"2024-11-21T12:45:31.000Z", "value"=>1.5},
+    {"time"=>"2024-11-21T14:35:31.000Z", "value"=>1.5},
+    {"time"=>"2024-11-21T14:45:31.000Z", "value"=>2.0},
+    {"time"=>"2024-11-21T14:55:31.000Z", "value"=>3.0},
+    {"time"=>"2024-11-21T15:25:31.000Z", "value"=>1.0}]
   end
 
-  test "should destroy rate" do
-    assert_difference("Rate.count", -1) do
-      delete rate_url(@rate), as: :json
-    end
-
-    assert_response :no_content
+  test "should get the best benefit possible with valid date" do
+    get daily_benefits_url("2024-11-21"), as: :json
+    assert_response :success
+    assert_equal @response.parsed_body, {"value"=>"150.0€"}
   end
 end
