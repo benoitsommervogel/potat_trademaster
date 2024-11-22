@@ -1,24 +1,9 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a potat trading tool to get rates and best benefits that can be made in one day
 
-Things you may want to cover:
+it has two routes
 
-* Ruby version
+get_daily_rates/:date to get the rates for a day
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+get_daily_benefits/:date to get the best possible benefit for one day
